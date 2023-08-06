@@ -1,5 +1,7 @@
 # python-basics
-A python script (with data) to help you start learning Python.
+A python script (with data) to help you start learning Python. 
+Designed specifically for those in economics, statistics, or data science who currently know MATLAB.
+Though, it is probably useful to most people who want to start learning Python.
 
 - 👋 Hi, I’m @jackson-alexander
 - 👀 I’m interested in economics, statistics, and data analysis
