@@ -28,7 +28,7 @@ print('\n'*100) # pseudo-clear the console, prints 100 'newline'
 ########################
 # What pandas can import: .csv, .xls/.xlsx, .txt, .dta (Stata), even URLs, SQL files, and a lot more
 # CSV:
-df_csv = pd.read_csv('cons-save-inc.csv') # read csv file with a header (default), default delimiter is comma (can be changed with ",sep=")
+df_csv = pd.read_csv('data//cons-save-inc.csv') # read csv file with a header (default), default delimiter is comma (can be changed with ",sep=")
 # result of pd.read_csv is called a dataframe (not really an array, basically like a table in Matlab)
 print('Dataframe from CSV:','\n','-'*20,'\n',df_csv.iloc[:5]) # printout of first 5 rows (index [:5] gets "all but 5", rows 0-4) of dataframe (with headers)
 # Dataframe to array:
@@ -37,13 +37,19 @@ array_csv = df_csv.to_numpy() # automatically reads pandas df to an array withou
 print('\n'*3,'Numpy Array from CSV:','\n','-'*20,'\n',array_csv[:5]) # printout of first 5 rows of numpy array
 
 # Excel:
-df_xls = pd.read_excel('cons-save-inc.xlsx') # read excel xls/xlsx file with the header (default) to a dataframe
+df_xls = pd.read_excel('data//cons-save-inc.xlsx') # read excel xls/xlsx file with the header (default) to a dataframe
 # everything else follows same as csv
 print('\n'*3,'Dataframe from Excel:','\n','-'*20,'\n',df_xls.iloc[:5]) # printout of first 5 rows (index [:5] gets "all but 5", rows 0-4) of dataframe (with headers)
 
 # Stata:
-df_stata = pd.read_stata('nbasal.dta') # read Stata .dta file with the header (default) to a dataframe
+df_stata = pd.read_stata('data//nbasal.dta') # read Stata .dta file with the header (default) to a dataframe
 print('\n'*3,'Dataframe from Stata:','\n','-'*20,'\n',df_stata.iloc[:5]) # printout of first 5 rows (index [:5] gets "all but 5", rows 0-4) of dataframe (with headers)
+
+# Time series data:
+df_GDP = pd.read_csv('data//GDPC1.csv') # import Real GDP data as dataframe 
+# note: we will keep it as a dataframe (table if you will) to take advantage of pandas time series functions
+df_GDP['DATE'] = pd.to_datetime(df_GDP['DATE']) # convert DATE column to datetime object
+df_GDP = df_GDP.set_index('DATE') # set index of dataframe
 
 ########################
 #### GRAB VARIABLES ####
@@ -75,10 +81,6 @@ plt.close() # close figure to continue code (alternatively, plt.show() will imme
 
 
 # time series plot:
-df_GDP = pd.read_csv('GDPC1.csv') # import Real GDP data as dataframe 
-# note: we will keep it as a dataframe (table if you will) to take advantage of pandas time series functions
-df_GDP['DATE'] = pd.to_datetime(df_GDP['DATE']) # convert DATE column to datetime object
-df_GDP = df_GDP.set_index('DATE') # set index of dataframe
 fig3 = plt.figure(figsize=(6,6))
 plt.plot(df_GDP.index,df_GDP['GDPC1'])
 plt.xlabel('Date')
