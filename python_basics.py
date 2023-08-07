@@ -116,7 +116,7 @@ df_api = df_api.replace('Construction', 'Gross Output') # replace column name fo
 df_api = df_api.set_index([pd.to_datetime(df_api['Year']), 'IndustrYDescription']) # turn year and 'IndustrYDescription' into index
 df_api = df_api['DataValue'].unstack(1) # unstack the data
 df_api = df_api.apply(pd.to_numeric) # turn data to numeric
-print('\n'*3,'Dataframe from Stata:','\n','-'*20,'\n',df_api)
+print('\n'*3,'Dataframe from API:','\n','-'*20,'\n',df_api)
 """
 
 ########################
