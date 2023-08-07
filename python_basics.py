@@ -18,6 +18,7 @@ import pandas as pd # pandas is used for importing data and basic data manipulat
 import numpy as np # numpy is an array package
 import matplotlib.pyplot as plt # for figures/plots
 import statsmodels.api as sm # regression models and more
+
 # I chose the most common naming conventions that you'll see on stack overflow
 # (pd for pandas, np for numpy)
 # general:
@@ -50,6 +51,73 @@ df_GDP = pd.read_csv('data//GDPC1.csv') # import Real GDP data as dataframe
 # note: we will keep it as a dataframe (table if you will) to take advantage of pandas time series functions
 df_GDP['DATE'] = pd.to_datetime(df_GDP['DATE']) # convert DATE column to datetime object
 df_GDP = df_GDP.set_index('DATE') # set index of dataframe
+
+
+# importing data from API:
+
+# This example: BEA - GDP by Industry
+# code borrowed from https://github.com/bdecon/econ_data/blob/master/APIs/BEA.ipynb
+
+# IN YOUR TERMINAL: pip3 install requests
+import requests # to request data from any API
+
+# request components
+"""
+api_key = 'YOUR_API_KEY' # input your api key
+base = 'https://apps.bea.gov/api/data/?&UserID={}'.format(api_key)
+get_param = '&method=GetParameterValues'
+dataset = '&DataSetName=GDPbyIndustry' # Input Dataset Name (for example, GDPbyIndustry)
+"""
+
+# To determine Table ID (key number): 
+"""
+param = 'TableID'
+# Construct URL from parameters above
+url = '{}{}{}&ParameterName={}&ResultFormat=json'.format(base, get_param, dataset, param)
+
+# Request parameter information from BEA API
+r = requests.get(url).json()
+
+# Show the results as a table:
+print('\n'*3,'TableID:','\n','-'*20,'\n',pd.DataFrame(r['BEAAPI']['Results']['ParamValue']).set_index('Key'))
+"""
+
+# To determine Industry number (key number):
+"""
+param = 'Industry'
+
+# Construct URL from parameters above
+url = '{}{}{}&ParameterName={}&ResultFormat=json'.format(base, get_param, dataset, param)
+
+# Request parameter information from BEA API
+r = requests.get(url).json()
+
+# Show the results as a table:
+print('\n'*3,'Industry Numbers:','\n','-'*20,'\n',pd.DataFrame(r['BEAAPI']['Results']['ParamValue']).set_index('Key'))
+"""
+
+# get data:
+"""
+get_data = '&method=GetData'
+table_id = '&TableId=25'
+freq = '&Frequency=A'
+year = '&Year=ALL'
+fmt = '&ResultFormat=json'
+industry = '&Industry=23'  # Input industry number (example, 23 is construction industry)
+
+# Combined url for request
+url = '{}{}{}{}{}{}{}{}'.format(base, get_data, dataset, year, industry, table_id, freq, fmt)
+# request data
+r = requests.get(url).json()
+# put data in a dataframe
+df_api = pd.DataFrame(r['BEAAPI']['Results'][0]['Data'])
+df_api = df_api.replace('Construction', 'Gross Output') # replace column name for clarity
+
+df_api = df_api.set_index([pd.to_datetime(df_api['Year']), 'IndustrYDescription']) # turn year and 'IndustrYDescription' into index
+df_api = df_api['DataValue'].unstack(1) # unstack the data
+df_api = df_api.apply(pd.to_numeric) # turn data to numeric
+print('\n'*3,'Dataframe from Stata:','\n','-'*20,'\n',df_api)
+"""
 
 ########################
 #### GRAB VARIABLES ####
