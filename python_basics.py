@@ -122,7 +122,7 @@ print('\n'*3,'Dataframe from API:','\n','-'*20,'\n',df_api)
 ########################
 #### GRAB VARIABLES ####
 ########################
-# using 'DataHw1.3.csv'
+# using 'cons-save-inc.csv'
 inc = array_csv[:,2] # remember: indexing starts at 0, '[:,2]' grabs 3rd column
 save = array_csv[:,1]
 cons = array_csv[:,0]
